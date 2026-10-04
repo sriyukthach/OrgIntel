@@ -36,7 +36,12 @@ const getApiBase = () => {
       return '/api';
     }
 
-    // 5. Remote production deployment (e.g. GitHub Pages) with no configured backend URL
+    // 5. Production GitHub Pages deployment
+    if (hostname === 'sriyukthach.github.io' || hostname.endsWith('github.io')) {
+      return 'https://orgintel.onrender.com/api';
+    }
+
+    // 6. Remote production deployment with no configured backend URL
     return null;
   }
 
