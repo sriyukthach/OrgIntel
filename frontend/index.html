@@ -8,242 +8,265 @@
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans">
+<body>
 
-  <!-- Top Navigation -->
+  <!-- Top Navigation Bar -->
   <header class="navbar">
     <div class="container nav-content">
       <div class="brand">
-        <div class="brand-logo">
-          <span class="logo-icon">🧠</span>
-          <span class="brand-title">ORGINTEL</span>
-        </div>
+        <span class="brand-badge">OI</span>
+        <span class="brand-title">ORGINTEL</span>
         <span class="brand-tagline">AI-powered company intelligence</span>
       </div>
 
-      <div class="nav-links">
+      <nav class="nav-links">
         <button id="nav-search-btn" class="nav-btn active">Search Company</button>
         <button id="nav-recent-btn" class="nav-btn">Recent Dossiers</button>
         <button id="nav-batch-btn" class="nav-btn">Batch Audit</button>
         <button id="nav-eval-btn" class="nav-btn">Evaluation</button>
-        <div class="health-badge" id="system-status-badge">
-          <span class="status-dot"></span> System Ready
+        <div class="system-status" id="system-status-badge">
+          <span class="status-indicator-dot"></span> System Ready
         </div>
-      </div>
+      </nav>
     </div>
   </header>
 
-  <!-- Main Content Area -->
+  <!-- Main Content Layout -->
   <main class="container main-layout">
     
-    <!-- SEARCH & DISCOVERY SECTION -->
-    <section id="search-section" class="search-card">
-      <div class="search-header">
-        <h1 class="hero-title">Discover Evidence-Backed Company Intelligence</h1>
-        <p class="hero-subtitle">Enter a 9-digit Norwegian organization number to trigger multi-source autonomous research and canonical registry verification.</p>
-      </div>
+    <!-- 1. SEARCH HERO SECTION -->
+    <section id="search-section" class="hero-section">
+      <h1 class="hero-headline">Evidence-Backed Company Intelligence</h1>
+      <p class="hero-subheadline">Traceable public evidence and canonical registry verification for Norwegian organizations.</p>
 
-      <form id="research-form" class="search-form">
-        <div class="input-wrapper">
-          <span class="input-icon">🏢</span>
+      <form id="research-form" class="search-container">
+        <div class="search-input-group">
+          <div class="search-icon-prefix">🏢</div>
           <input 
             type="text" 
             id="org-input" 
-            placeholder="e.g. 923609016 (Equinor) or 982463718 (DNB)" 
+            placeholder="Enter 9-digit Norwegian Org Number (e.g. 923 609 016)" 
             maxlength="14" 
             autocomplete="off" 
             required 
           />
-          <button type="submit" id="submit-research-btn" class="btn-primary">
+          <button type="submit" id="submit-research-btn" class="search-btn">
             <span class="btn-text">Research Company</span>
-            <span class="btn-loader hidden"></span>
+            <span class="btn-spinner hidden"></span>
           </button>
         </div>
 
-        <div class="search-options">
-          <label class="checkbox-label">
+        <div class="search-controls">
+          <label class="checkbox-control">
             <input type="checkbox" id="force-refresh-chk">
             <span>Force fresh re-audit (bypass cache)</span>
           </label>
+
+          <div class="feature-indicators">
+            <span class="indicator-item"><span class="indicator-check">✓</span> Live public sources</span>
+            <span class="indicator-item"><span class="indicator-check">✓</span> Registry verified</span>
+            <span class="indicator-item"><span class="indicator-check">✓</span> Evidence-backed</span>
+          </div>
         </div>
       </form>
 
-      <!-- Quick sample shortcuts -->
-      <div class="sample-chips">
-        <span class="chips-label">Benchmark Companies:</span>
-        <button class="chip" data-org="923609016">Equinor ASA (923609016)</button>
-        <button class="chip" data-org="982463718">DNB Bank ASA (982463718)</button>
-        <button class="chip" data-org="920218687">Kongsberg Gruppen (920218687)</button>
-        <button class="chip" data-org="912345678">Nordic Tech Innovation (912345678)</button>
-        <button class="chip" data-org="914778271">Schibsted ASA (914778271)</button>
+      <!-- Benchmark Shortcuts -->
+      <div class="benchmark-shortcuts">
+        <span class="benchmark-label">Benchmark Companies:</span>
+        <button type="button" class="benchmark-chip" data-org="923609016">Equinor ASA (923609016)</button>
+        <button type="button" class="benchmark-chip" data-org="982463718">DNB Bank ASA (982463718)</button>
+        <button type="button" class="benchmark-chip" data-org="920218687">Kongsberg Gruppen (920218687)</button>
+        <button type="button" class="benchmark-chip" data-org="914778271">Schibsted ASA (914778271)</button>
+        <button type="button" class="benchmark-chip" data-org="912345678">Nordic Tech Innovation (912345678)</button>
       </div>
     </section>
 
-    <!-- LIVE AGENT PROGRESS TIMELINE -->
-    <section id="progress-container" class="progress-section hidden">
-      <div class="progress-card">
-        <div class="progress-header">
-          <div class="progress-title-group">
-            <span class="spinner-icon">⚡</span>
-            <div>
-              <h3 id="progress-company-title" class="progress-title">Autonomous Agent Research in Progress...</h3>
-              <p id="progress-step-detail" class="progress-subtitle">Observing public registries and planning verification workflow.</p>
-            </div>
-          </div>
-          <div class="progress-timer" id="progress-timer">0.0s</div>
+    <!-- 2. LIVE AGENT INVESTIGATION PANEL -->
+    <section id="progress-container" class="investigation-panel hidden">
+      <div class="investigation-header">
+        <div class="investigation-title-group">
+          <span class="investigation-badge">ORGINTEL AGENT</span>
+          <span class="investigation-title" id="progress-title">Autonomous Investigation in Progress</span>
         </div>
+        <div class="investigation-metrics">
+          <span>Sources: <strong id="progress-source-count">4</strong></span>
+          <span>Requests: <strong id="progress-req-count">--</strong></span>
+          <span class="investigation-timer" id="progress-timer">0.0s</span>
+        </div>
+      </div>
 
-        <div class="timeline" id="agent-timeline">
-          <!-- Timeline steps dynamically rendered -->
-        </div>
+      <div class="investigation-steps" id="agent-timeline">
+        <!-- Steps dynamically managed -->
       </div>
     </section>
 
-    <!-- ERROR BANNER -->
-    <section id="error-banner" class="alert-box alert-error hidden">
+    <!-- 3. ERROR ALERT BANNER -->
+    <section id="error-banner" class="alert-banner error hidden">
       <div class="alert-icon">⚠️</div>
-      <div class="alert-content">
-        <h4 id="error-title">Research Warning</h4>
-        <p id="error-message">Unable to resolve organization details.</p>
+      <div style="flex: 1;">
+        <div class="alert-title" id="error-title">Research Alert</div>
+        <div id="error-message">Unable to resolve organization details.</div>
       </div>
-      <button class="alert-close" id="close-error-btn">&times;</button>
+      <button class="modal-close-btn" id="close-error-btn">&times;</button>
     </section>
 
-    <!-- RESULTS DOSSIER CONTAINER -->
-    <section id="results-container" class="results-layout hidden">
+    <!-- 4. COMPANY DOSSIER VIEW -->
+    <section id="results-container" class="hidden">
 
-      <!-- Company Hero Banner -->
+      <!-- Dossier Hero -->
       <div class="dossier-hero">
-        <div class="dossier-hero-left">
-          <div class="company-badge-row">
-            <span id="res-status-badge" class="badge badge-active">Active</span>
-            <span id="res-org-form-badge" class="badge badge-subtle">AS</span>
-            <span id="res-confidence-badge" class="badge badge-confidence">High Confidence (100%)</span>
+        <div class="dossier-primary-info">
+          <div class="dossier-tagline-row">
+            <span id="res-org-number" class="text-mono">923 609 016</span>
+            <span>•</span>
+            <span id="res-status-badge" class="badge-status verified">ACTIVE</span>
+            <span>•</span>
+            <span id="res-org-form-badge" class="badge-status not-available">ASA</span>
+            <span>•</span>
+            <span id="res-location">STAVANGER, NORWAY</span>
           </div>
-          <h2 id="res-company-name" class="dossier-company-name">Company Legal Name</h2>
-          <div class="dossier-meta-row">
-            <span><strong>Org Nr:</strong> <code id="res-org-number">999999999</code></span>
-            <span><strong>Industry:</strong> <span id="res-industry-desc">Technology & Programming</span></span>
-            <span><strong>Municipality:</strong> <span id="res-location">Oslo, Norway</span></span>
+          <h2 id="res-company-name" class="dossier-company-name">EQUINOR ASA</h2>
+          <div class="dossier-sub-info">
+            <span><strong>Industry:</strong> <span id="res-industry-desc">Extraction of crude petroleum and natural gas</span></span>
+          </div>
+          <div class="dossier-metrics-strip" id="res-metrics-strip">
+            <span class="compact-metric-pill" id="pill-facts-count">14 VERIFIED FACTS</span>
+            <span class="compact-metric-pill" id="pill-evidence-count">3 EVIDENCE SOURCES</span>
+            <span class="compact-metric-pill" id="pill-requests-count">0 HTTP REQUESTS</span>
+            <span class="compact-metric-pill" id="pill-latency-count">0.12s RESEARCH</span>
           </div>
         </div>
 
-        <div class="dossier-hero-right">
-          <div class="hero-action-buttons">
-            <button id="refresh-dossier-btn" class="btn-secondary btn-sm" title="Re-run public research">🔄 Re-Audit</button>
-            <button id="export-json-btn" class="btn-secondary btn-sm" title="Export as structured JSON">📥 JSON</button>
-            <button id="export-csv-btn" class="btn-secondary btn-sm" title="Export facts to CSV">📄 CSV</button>
+        <div class="dossier-hero-actions">
+          <div class="action-btn-group">
+            <button id="refresh-dossier-btn" class="btn-secondary" title="Re-run public research">🔄 Re-Audit</button>
+            <button id="export-json-btn" class="btn-secondary" title="Export as structured JSON">📥 JSON</button>
+            <button id="export-csv-btn" class="btn-secondary" title="Export facts to CSV">📄 CSV</button>
           </div>
-          <div class="audit-timestamp-box">
-            <span class="text-xs text-muted">Last Researched:</span>
-            <span id="res-audit-timestamp" class="text-xs font-mono">2026-10-04 09:45 UTC</span>
+          <div class="text-xs text-muted">
+            Audited: <span id="res-audit-timestamp" class="text-mono">2026-10-04 09:45 UTC</span>
           </div>
         </div>
       </div>
 
-      <!-- Dossier Navigation Tabs -->
-      <div class="tabs-nav">
-        <button class="tab-btn active" data-tab="tab-overview">Overview</button>
-        <button class="tab-btn" data-tab="tab-facts">Verified Facts <span id="facts-count-badge" class="tab-pill">0</span></button>
-        <button class="tab-btn" data-tab="tab-leadership">Leadership & Board <span id="leadership-count-badge" class="tab-pill">0</span></button>
-        <button class="tab-btn" data-tab="tab-financials">Financials <span id="fin-count-badge" class="tab-pill">0</span></button>
-        <button class="tab-btn" data-tab="tab-activities">Activity & Announcements</button>
-        <button class="tab-btn" data-tab="tab-evidence">Evidence Provenance <span id="evidence-count-badge" class="tab-pill">0</span></button>
-        <button class="tab-btn" data-tab="tab-history">Snapshots & Diffs</button>
+      <!-- Dossier Tabs Navigation -->
+      <div class="dossier-tabs mt-4">
+        <button class="tab-button active" data-tab="tab-overview">Overview</button>
+        <button class="tab-button" data-tab="tab-facts">Verified Facts <span id="facts-count-badge" class="tab-count">0</span></button>
+        <button class="tab-button" data-tab="tab-leadership">Leadership & Board <span id="leadership-count-badge" class="tab-count">0</span></button>
+        <button class="tab-button" data-tab="tab-financials">Financials <span id="fin-count-badge" class="tab-count">0</span></button>
+        <button class="tab-button" data-tab="tab-activities">Activity & Notices</button>
+        <button class="tab-button" data-tab="tab-evidence">Evidence Provenance <span id="evidence-count-badge" class="tab-count">0</span></button>
+        <button class="tab-button" data-tab="tab-history">Snapshots & History</button>
       </div>
 
       <!-- Tab Content Panels -->
-      <div class="tabs-body">
+      <div class="dossier-panels mt-4">
 
         <!-- 1. OVERVIEW TAB -->
-        <div id="tab-overview" class="tab-pane active">
-          <div class="grid-2col">
-            <div class="card">
-              <h3 class="card-title">Business Description & Operations</h3>
-              <p id="res-business-desc" class="card-body-text">Loading company overview...</p>
-              <div class="source-credit mt-4">
-                <span class="text-xs text-muted">Source:</span>
-                <a id="res-desc-source" href="#" target="_blank" class="source-link">Official Register / Website</a>
+        <div id="tab-overview" class="tab-panel active">
+          <div class="cards-grid-2col">
+            <div class="panel-card">
+              <div class="panel-card-header">
+                <div>
+                  <h3 class="panel-title">Business Description & Operations</h3>
+                  <p class="panel-desc">Authoritative register purpose and public mission statement.</p>
+                </div>
+              </div>
+              <p id="res-business-desc" class="panel-desc" style="color: var(--text-primary); font-size: 0.95rem; line-height: 1.6;">Loading company overview...</p>
+              <div class="mt-4 pt-3" style="border-top: 1px solid var(--border-subtle); font-size: 0.8rem;">
+                <span class="text-muted">Source:</span>
+                <a id="res-desc-source" href="#" target="_blank" class="source-anchor">Official Register / Website</a>
               </div>
             </div>
 
-            <div class="card">
-              <h3 class="card-title">Registration & Identity Details</h3>
-              <div class="spec-list">
-                <div class="spec-item">
-                  <span class="spec-label">Legal Name</span>
-                  <span id="spec-legal-name" class="spec-value">-</span>
+            <div class="panel-card">
+              <div class="panel-card-header">
+                <div>
+                  <h3 class="panel-title">Registration & Identity Details</h3>
+                  <p class="panel-desc">Canonical attributes from Enhetsregisteret.</p>
                 </div>
-                <div class="spec-item">
-                  <span class="spec-label">Organization Form</span>
-                  <span id="spec-org-form" class="spec-value">-</span>
+              </div>
+              <div class="specs-table">
+                <div class="spec-row">
+                  <span class="spec-key">Legal Entity Name</span>
+                  <span id="spec-legal-name" class="spec-val">-</span>
                 </div>
-                <div class="spec-item">
-                  <span class="spec-label">Registered Address</span>
-                  <span id="spec-address" class="spec-value">-</span>
+                <div class="spec-row">
+                  <span class="spec-key">Organization Form</span>
+                  <span id="spec-org-form" class="spec-val">-</span>
                 </div>
-                <div class="spec-item">
-                  <span class="spec-label">NACE Industry Code</span>
-                  <span id="spec-nace" class="spec-value">-</span>
+                <div class="spec-row">
+                  <span class="spec-key">Registered Address</span>
+                  <span id="spec-address" class="spec-val">-</span>
                 </div>
-                <div class="spec-item">
-                  <span class="spec-label">Registration Date</span>
-                  <span id="spec-reg-date" class="spec-value">-</span>
+                <div class="spec-row">
+                  <span class="spec-key">NACE Industry Code</span>
+                  <span id="spec-nace" class="spec-val">-</span>
                 </div>
-                <div class="spec-item">
-                  <span class="spec-label">Official Website</span>
-                  <span id="spec-website" class="spec-value"><a href="#" target="_blank">-</a></span>
+                <div class="spec-row">
+                  <span class="spec-key">Registration Date</span>
+                  <span id="spec-reg-date" class="spec-val">-</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-key">Official Website</span>
+                  <span id="spec-website" class="spec-val"><a href="#" target="_blank" class="source-anchor">-</a></span>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Performance & Budget Guardrail Card -->
-          <div class="card mt-4 run-metrics-card">
-            <h4 class="card-subtitle">⚡ Research Execution & Challenge Compliance</h4>
-            <div class="metrics-grid">
-              <div class="metric-box">
-                <span class="metric-label">Outbound HTTP Calls</span>
-                <span id="metric-requests" class="metric-value">0</span>
-                <span class="metric-limit">Limit: 2000</span>
+          <!-- Execution Metrics -->
+          <div class="panel-card mt-4">
+            <div class="panel-card-header">
+              <div>
+                <h4 class="panel-title">⚡ Research Run Telemetry</h4>
+                <p class="panel-desc">Real-time execution cost, latency, and outbound request metrics.</p>
               </div>
-              <div class="metric-box">
-                <span class="metric-label">Execution Latency</span>
-                <span id="metric-latency" class="metric-value">0 ms</span>
-                <span class="metric-limit">Limit: 45 min</span>
+            </div>
+            <div class="metadata-grid">
+              <div class="metadata-box">
+                <span class="meta-box-label">Outbound HTTP Calls</span>
+                <span id="metric-requests" class="meta-box-val">0</span>
+                <span class="meta-box-sub">Limit: 2,000</span>
               </div>
-              <div class="metric-box">
-                <span class="metric-label">Estimated Cost</span>
-                <span id="metric-cost" class="metric-value">$0.0000</span>
-                <span class="metric-limit">Limit: $10.00</span>
+              <div class="metadata-box">
+                <span class="meta-box-label">Execution Latency</span>
+                <span id="metric-latency" class="meta-box-val">0 ms</span>
+                <span class="meta-box-sub">Real execution time</span>
               </div>
-              <div class="metric-box">
-                <span class="metric-label">Verified Facts Ratio</span>
-                <span id="metric-facts-ratio" class="metric-value">100%</span>
-                <span class="metric-limit">Zero Hallucination</span>
+              <div class="metadata-box">
+                <span class="meta-box-label">Estimated Cost</span>
+                <span id="metric-cost" class="meta-box-val">$0.0000</span>
+                <span class="meta-box-sub">Limit: $10.00</span>
+              </div>
+              <div class="metadata-box">
+                <span class="meta-box-label">Verified Facts Ratio</span>
+                <span id="metric-facts-ratio" class="meta-box-val">100%</span>
+                <span class="meta-box-sub">Evidence backed</span>
               </div>
             </div>
           </div>
         </div>
 
         <!-- 2. VERIFIED FACTS TAB -->
-        <div id="tab-facts" class="tab-pane">
-          <div class="card">
-            <div class="card-header-flex">
+        <div id="tab-facts" class="tab-panel hidden">
+          <div class="panel-card">
+            <div class="panel-card-header">
               <div>
-                <h3 class="card-title">Atomic Verifiable Company Facts</h3>
-                <p class="card-desc">Every individual fact is backed by public source URL, timestamp, and textual evidence excerpt.</p>
+                <h3 class="panel-title">Atomic Verifiable Company Facts</h3>
+                <p class="panel-desc">Every individual attribute is traceable to an authentic public source URL, timestamp, and excerpt.</p>
               </div>
             </div>
-            <div class="table-responsive">
-              <table class="data-table" id="facts-table">
+            <div class="table-wrapper">
+              <table class="enterprise-table" id="facts-table">
                 <thead>
                   <tr>
                     <th>Field</th>
-                    <th>Extracted Fact Value</th>
-                    <th>Status</th>
+                    <th>Fact Value</th>
+                    <th>Verification</th>
                     <th>Confidence</th>
                     <th>Public Source</th>
                     <th>Actions</th>
@@ -258,23 +281,31 @@
         </div>
 
         <!-- 3. LEADERSHIP TAB -->
-        <div id="tab-leadership" class="tab-pane">
-          <div class="card">
-            <h3 class="card-title">Verified Executive Management & Board</h3>
-            <p class="card-desc">Extracted directly from authoritative Enhetsregisteret Roller registry.</p>
-            <div class="grid-3col mt-4" id="leadership-grid">
+        <div id="tab-leadership" class="tab-panel hidden">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3 class="panel-title">Verified Executive Management & Board</h3>
+                <p class="panel-desc">Extracted directly from Enhetsregisteret Roller registry with individual person / corporate entity disambiguation.</p>
+              </div>
+            </div>
+            <div class="cards-grid-3col mt-3" id="leadership-grid">
               <!-- Leadership cards -->
             </div>
           </div>
         </div>
 
         <!-- 4. FINANCIALS TAB -->
-        <div id="tab-financials" class="tab-pane">
-          <div class="card">
-            <h3 class="card-title">Official Accounting Records (Regnskapsregisteret)</h3>
-            <p class="card-desc">Audited annual financial figures reported in Norwegian Kroner (NOK).</p>
-            <div class="table-responsive mt-4">
-              <table class="data-table" id="financials-table">
+        <div id="tab-financials" class="tab-panel hidden">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3 class="panel-title">Official Accounting Records (Regnskapsregisteret)</h3>
+                <p class="panel-desc">Audited annual financial filings reported in Norwegian Kroner (NOK).</p>
+              </div>
+            </div>
+            <div class="table-wrapper mt-3">
+              <table class="enterprise-table" id="financials-table">
                 <thead>
                   <tr>
                     <th>Period</th>
@@ -283,7 +314,7 @@
                     <th>Net Profit / Loss (Årsresultat)</th>
                     <th>Total Assets (Eiendeler)</th>
                     <th>Equity (Egenkapital)</th>
-                    <th>Status</th>
+                    <th>Verification</th>
                   </tr>
                 </thead>
                 <tbody id="financials-table-body">
@@ -295,33 +326,45 @@
         </div>
 
         <!-- 5. ACTIVITIES TAB -->
-        <div id="tab-activities" class="tab-pane">
-          <div class="card">
-            <h3 class="card-title">Official Announcements & Register Changes</h3>
-            <p class="card-desc">Corporate events published in Kunngjøringsregisteret.</p>
-            <div class="activity-feed mt-4" id="activity-feed">
+        <div id="tab-activities" class="tab-panel hidden">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3 class="panel-title">Official Announcements & Register Changes</h3>
+                <p class="panel-desc">Corporate events published in Kunngjøringsregisteret.</p>
+              </div>
+            </div>
+            <div class="mt-3" id="activity-feed">
               <!-- Activity timeline items -->
             </div>
           </div>
         </div>
 
         <!-- 6. EVIDENCE PROVENANCE TAB -->
-        <div id="tab-evidence" class="tab-pane">
-          <div class="card">
-            <h3 class="card-title">Evidence Provenance Repository</h3>
-            <p class="card-desc">Full transparency: inspect the authentic textual excerpts extracted from each source URL.</p>
-            <div class="evidence-list mt-4" id="evidence-list">
+        <div id="tab-evidence" class="tab-panel hidden">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3 class="panel-title">Evidence Provenance Repository</h3>
+                <p class="panel-desc">Full transparency: inspect the authentic textual excerpts extracted from each source URL.</p>
+              </div>
+            </div>
+            <div class="mt-3" id="evidence-list">
               <!-- Evidence items -->
             </div>
           </div>
         </div>
 
-        <!-- 7. SNAPSHOTS & DIFFS TAB -->
-        <div id="tab-history" class="tab-pane">
-          <div class="card">
-            <h3 class="card-title">Temporal Snapshots & Change Detection</h3>
-            <p class="card-desc">Tracks changes over time (leadership departures, address updates, financial filings).</p>
-            <div id="snapshot-diff-container" class="mt-4">
+        <!-- 7. SNAPSHOTS & HISTORY TAB -->
+        <div id="tab-history" class="tab-panel hidden">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3 class="panel-title">Temporal Snapshots & Change Detection</h3>
+                <p class="panel-desc">Audit trail tracking changes over time (leadership updates, address changes, filings).</p>
+              </div>
+            </div>
+            <div id="snapshot-diff-container" class="mt-3">
               <!-- Snapshot diffs -->
             </div>
           </div>
@@ -330,108 +373,116 @@
       </div>
     </section>
 
-    <!-- RECENT DOSSIERS VIEW -->
-    <section id="recent-section" class="recent-card hidden">
-      <div class="card">
-        <h2 class="card-title">Recently Researched Companies</h2>
-        <p class="card-desc">Locally cached company dossiers ready for instant review.</p>
-        <div class="table-responsive mt-4">
-          <table class="data-table" id="recent-table">
+    <!-- 5. RECENT DOSSIERS VIEW -->
+    <section id="recent-section" class="panel-card hidden">
+      <div class="panel-card-header">
+        <div>
+          <h2 class="panel-title">Recently Researched Companies</h2>
+          <p class="panel-desc">Locally cached company dossiers ready for instant review.</p>
+        </div>
+      </div>
+      <div class="table-wrapper mt-3">
+        <table class="enterprise-table" id="recent-table">
+          <thead>
+            <tr>
+              <th>Org Number</th>
+              <th>Company Name</th>
+              <th>Form</th>
+              <th>Status</th>
+              <th>Location</th>
+              <th>Last Audited</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="recent-table-body">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6. BATCH AUDIT VIEW -->
+    <section id="batch-section" class="panel-card hidden">
+      <div class="panel-card-header">
+        <div>
+          <h2 class="panel-title">Batch Research & High-Volume Processor</h2>
+          <p class="panel-desc">Run concurrent research across lists of Norwegian organization numbers while respecting rate limits.</p>
+        </div>
+      </div>
+      
+      <div class="mt-3">
+        <label class="spec-key" for="batch-input">Enter Norwegian Org Numbers (one per line):</label>
+        <textarea id="batch-input" class="textarea-control mt-2" rows="6" placeholder="923609016&#10;982463718&#10;920218687&#10;914778271&#10;912345678"></textarea>
+        <div class="mt-3" style="display: flex; gap: 0.5rem;">
+          <button id="start-batch-btn" class="search-btn" style="border-radius: var(--radius-md); padding: 0.6rem 1.25rem;">Start Batch Research</button>
+          <button id="load-sample-batch-btn" class="btn-secondary">Load Benchmark List</button>
+        </div>
+      </div>
+
+      <div id="batch-results-box" class="mt-4 hidden">
+        <h3 class="panel-title mb-2">Batch Execution Results</h3>
+        <div id="batch-summary-stats" class="metadata-grid mt-2"></div>
+        <div class="table-wrapper mt-4">
+          <table class="enterprise-table" id="batch-table">
             <thead>
               <tr>
                 <th>Org Number</th>
                 <th>Company Name</th>
-                <th>Form</th>
                 <th>Status</th>
-                <th>Location</th>
-                <th>Last Audited</th>
+                <th>Verified Facts</th>
+                <th>Latency</th>
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody id="recent-table-body">
-              <!-- Dynamic rows -->
-            </tbody>
+            <tbody id="batch-table-body"></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- BATCH AUDIT VIEW -->
-    <section id="batch-section" class="batch-card hidden">
-      <div class="card">
-        <h2 class="card-title">Batch Research & 1,000 Company Processor</h2>
-        <p class="card-desc">Run concurrent research across large lists of Norwegian organization numbers while respecting rate limits.</p>
-        
-        <div class="batch-form mt-4">
-          <label class="form-label" for="batch-input">Enter Norwegian Org Numbers (one per line):</label>
-          <textarea id="batch-input" class="textarea-input" rows="6" placeholder="923609016&#10;982463718&#10;920218687&#10;912345678&#10;914778271"></textarea>
-          <div class="batch-actions mt-3">
-            <button id="start-batch-btn" class="btn-primary">Start Batch Research</button>
-            <button id="load-sample-batch-btn" class="btn-secondary">Load Benchmark List</button>
-          </div>
-        </div>
-
-        <div id="batch-results-box" class="mt-6 hidden">
-          <h3 class="card-subtitle">Batch Execution Results</h3>
-          <div id="batch-summary-stats" class="metrics-grid mt-2"></div>
-          <div class="table-responsive mt-4">
-            <table class="data-table" id="batch-table">
-              <thead>
-                <tr>
-                  <th>Org Number</th>
-                  <th>Company Name</th>
-                  <th>Status</th>
-                  <th>Verified Facts</th>
-                  <th>Latency</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="batch-table-body"></tbody>
-            </table>
-          </div>
+    <!-- 7. EVALUATION VIEW -->
+    <section id="eval-section" class="panel-card hidden">
+      <div class="panel-card-header">
+        <div>
+          <h2 class="panel-title">Autonomous Evaluation & Compliance Harness</h2>
+          <p class="panel-desc">Measures fact accuracy, evidence provenance rates, and challenge constraint compliance.</p>
         </div>
       </div>
-    </section>
-
-    <!-- EVALUATION VIEW -->
-    <section id="eval-section" class="eval-card hidden">
-      <div class="card">
-        <h2 class="card-title">Autonomous Evaluation & Compliance Harness</h2>
-        <p class="card-desc">Measures fact accuracy, evidence provenance rates, and challenge constraint compliance.</p>
-        <div class="eval-actions mt-4">
-          <button id="run-eval-btn" class="btn-primary">Run Live Evaluation Suite</button>
-        </div>
-        <div id="eval-report-display" class="markdown-preview mt-6">
-          <p class="text-muted">Click "Run Live Evaluation Suite" to benchmark the agent against the test suite.</p>
-        </div>
+      <div class="mt-3">
+        <button id="run-eval-btn" class="search-btn" style="border-radius: var(--radius-md); padding: 0.6rem 1.25rem;">Run Live Evaluation Suite</button>
+      </div>
+      <div id="eval-report-display" class="mt-4" style="background: var(--bg-surface-subtle); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+        <p class="text-muted">Click "Run Live Evaluation Suite" to benchmark the agent against the test suite.</p>
       </div>
     </section>
 
   </main>
 
   <!-- Evidence Modal Dialog -->
-  <div id="evidence-modal" class="modal-backdrop hidden">
-    <div class="modal-dialog">
+  <div id="evidence-modal" class="modal-overlay hidden">
+    <div class="modal-card">
       <div class="modal-header">
         <h3 class="modal-title" id="modal-fact-title">Evidence Excerpt</h3>
-        <button class="modal-close" id="close-modal-btn">&times;</button>
+        <button class="modal-close-btn" id="close-modal-btn">&times;</button>
       </div>
       <div class="modal-body">
-        <div class="modal-field-info">
-          <span class="modal-label">Fact Field:</span>
-          <span id="modal-field-name" class="font-mono font-semibold">legal_name</span>
+        <div>
+          <span class="spec-key">Fact Field:</span>
+          <code id="modal-field-name" style="font-weight: 700; color: var(--text-primary); margin-left: 0.5rem;">legal_name</code>
         </div>
-        <div class="modal-field-info">
-          <span class="modal-label">Extracted Value:</span>
-          <span id="modal-field-value" class="font-semibold text-slate-800">EQUINOR ASA</span>
+        <div>
+          <span class="spec-key">Extracted Value:</span>
+          <span id="modal-field-value" style="font-weight: 700; color: var(--text-primary); margin-left: 0.5rem;">EQUINOR ASA</span>
         </div>
-        <div class="modal-field-info">
-          <span class="modal-label">Source Document / API:</span>
-          <a id="modal-source-link" href="#" target="_blank" class="source-link">https://data.brreg.no/...</a>
+        <div>
+          <span class="spec-key">Source Document / API:</span>
+          <div class="mt-1">
+            <a id="modal-source-link" href="#" target="_blank" class="source-anchor text-mono" style="font-size: 0.8rem; word-break: break-all;">https://data.brreg.no/...</a>
+          </div>
         </div>
-        <div class="modal-excerpt-box">
-          <h5 class="excerpt-heading">Authentic Source Excerpt:</h5>
-          <blockquote id="modal-excerpt-text" class="modal-quote">
+        <div>
+          <span class="spec-key">Authentic Source Excerpt:</span>
+          <blockquote id="modal-excerpt-text" class="evidence-quote-box mt-2">
             "Exact excerpt from the source webpage or API payload..."
           </blockquote>
         </div>
@@ -443,15 +494,15 @@
   </div>
 
   <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-content">
+  <footer class="app-footer">
+    <div class="container footer-inner">
       <div>
         <strong>OrgIntel</strong> &copy; 2026. Built for the Builderr.ai Hackathon Challenge.
       </div>
-      <div class="footer-meta">
-        <span>Authoritative Data: Brønnøysundregistrene (Brreg)</span>
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <span>Authoritative Registry: Brønnøysundregistrene</span>
         <span>•</span>
-        <span>Zero-Hallucination Evidence Architecture</span>
+        <span>Traceable Evidence Architecture</span>
       </div>
     </div>
   </footer>
