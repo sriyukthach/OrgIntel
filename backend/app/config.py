@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     PORT: int = 8000
     ENVIRONMENT: str = "development"
     LOG_LEVEL: str = "INFO"
+    CORS_ORIGINS: str = "*"
 
     # Storage Paths
     BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent

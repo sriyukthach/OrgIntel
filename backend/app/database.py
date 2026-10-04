@@ -181,6 +181,7 @@ CREATE INDEX IF NOT EXISTS idx_cache_expires ON source_cache(expires_at);
 
 def init_sync_db():
     """Synchronously create database tables and run migrations."""
+    settings.DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(settings.DATABASE_PATH))
     try:
         conn.executescript(SCHEMA_SQL)
@@ -200,6 +201,7 @@ def init_sync_db():
 
 async def init_db():
     """Asynchronously initialize SQLite database and run migrations."""
+    settings.DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
     async with aiosqlite.connect(str(settings.DATABASE_PATH)) as db:
         await db.executescript(SCHEMA_SQL)
         try:
