@@ -7,7 +7,7 @@ OBSERVE -> PLAN -> SEARCH -> EXTRACT -> VERIFY -> STORE -> CHECK GAPS -> SEARCH 
 import time
 import uuid
 import asyncio
-from typing import AsyncGenerator, Dict, Any, List, Optional, Callable
+from typing import AsyncGenerator, Dict, Any, List, Optional, Callable, Tuple
 from datetime import datetime, timezone
 
 from backend.app.models import (
