@@ -267,8 +267,9 @@ class Repository:
                     """
                     INSERT INTO people (
                         id, org_number, name, role, role_code, birth_year,
-                        effective_date, source_url, verification_status, evidence_excerpt
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        effective_date, source_url, verification_status, evidence_excerpt,
+                        is_organization, organization_number
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         pid,
@@ -281,6 +282,8 @@ class Repository:
                         p.source_url,
                         p.verification_status.value,
                         p.evidence_excerpt,
+                        1 if p.is_organization else 0,
+                        p.organization_number,
                     ),
                 )
 
@@ -418,6 +421,8 @@ class Repository:
                     source_url=r["source_url"],
                     verification_status=VerificationStatus(r["verification_status"]),
                     evidence_excerpt=r["evidence_excerpt"],
+                    is_organization=bool(r["is_organization"]) if "is_organization" in r.keys() else False,
+                    organization_number=r["organization_number"] if "organization_number" in r.keys() else None,
                 )
                 for r in people_rows
             ]

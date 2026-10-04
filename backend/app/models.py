@@ -108,7 +108,7 @@ class CompanyOverview(BaseModel):
 
 
 class PersonRole(BaseModel):
-    """Leadership or board member associated with company."""
+    """Leadership, board member, or institutional entity associated with company."""
     name: str
     role: str
     role_code: Optional[str] = None
@@ -117,6 +117,8 @@ class PersonRole(BaseModel):
     source_url: str
     verification_status: VerificationStatus = VerificationStatus.VERIFIED
     evidence_excerpt: Optional[str] = None
+    is_organization: bool = False
+    organization_number: Optional[str] = None
 
 
 class FinancialRecord(BaseModel):

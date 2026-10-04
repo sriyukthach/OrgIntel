@@ -1,10 +1,14 @@
 """
-Unit tests for Fact Extraction and Normalization.
+Unit tests for Fact Extraction, Name Normalization, and Leadership Extraction.
 """
 
-from backend.app.models import CompanyIdentity, VerificationStatus
+from backend.app.models import CompanyIdentity, PersonRole, VerificationStatus
 from backend.app.extraction.facts import normalize_numeric_amount, extract_identity_facts
-from backend.app.extraction.people import extract_people_from_brreg_roles, people_to_facts
+from backend.app.extraction.people import (
+    normalize_name,
+    extract_people_from_brreg_roles,
+    people_to_facts,
+)
 from backend.app.extraction.financial import extract_financials_from_regnskap, financials_to_facts
 
 
@@ -14,6 +18,29 @@ def test_normalize_numeric_amount():
     assert normalize_numeric_amount("1.5 mrd") == 1_500_000_000.0
     assert normalize_numeric_amount(500000) == 500000.0
     assert normalize_numeric_amount("N/A") is None
+
+
+def test_normalize_name_various_shapes():
+    # 1. Regression test: single-element list from Brreg enhet.navn
+    assert normalize_name(["ERNST & YOUNG AS"]) == "ERNST & YOUNG AS"
+
+    # 2. Plain string
+    assert normalize_name("ERNST & YOUNG AS") == "ERNST & YOUNG AS"
+    assert normalize_name("   Anders   Opedal   ") == "Anders Opedal"
+
+    # 3. Empty list & None
+    assert normalize_name([]) == ""
+    assert normalize_name(None) == ""
+    assert normalize_name(["", "  ", None]) == ""
+
+    # 4. Multi-item list (multiline company / department names)
+    assert normalize_name(["STATOIL PETROLEUM AS", "AVDELING OSLO"]) == "STATOIL PETROLEUM AS AVDELING OSLO"
+    assert normalize_name(["", "  ", "ERNST & YOUNG AS"]) == "ERNST & YOUNG AS"
+
+    # 5. Dict structure with fornavn / etternavn
+    assert normalize_name({"fornavn": "Anders", "mellomnavn": None, "etternavn": "Opedal"}) == "Anders Opedal"
+    assert normalize_name({"fornavn": "Jon", "mellomnavn": "Erik", "etternavn": "Reinhardsen"}) == "Jon Erik Reinhardsen"
+    assert normalize_name({"navn": ["KPMG AS"]}) == "KPMG AS"
 
 
 def test_extract_identity_facts():
@@ -67,18 +94,46 @@ def test_extract_people_from_brreg_roles():
                     }
                 ],
             },
+            {
+                "type": {"kode": "REVI", "beskrivelse": "Revisor"},
+                "roller": [
+                    {
+                        "type": {"kode": "REVI", "beskrivelse": "Revisor"},
+                        "enhet": {
+                            "organisasjonsnummer": "976389387",
+                            "navn": ["ERNST & YOUNG AS"],
+                            "organisasjonsform": {"kode": "AS", "beskrivelse": "Aksjeselskap"},
+                        },
+                        "fratraadt": False,
+                    }
+                ],
+            },
         ]
     }
 
     people = extract_people_from_brreg_roles(mock_roles_payload, "https://data.brreg.no/roles")
-    assert len(people) == 2
+    assert len(people) == 3
+
+    # Verify all names are valid strings
+    for p in people:
+        assert isinstance(p.name, str)
+        assert len(p.name) > 0
+
     names = [p.name for p in people]
     assert "Jon Erik Reinhardsen" in names
     assert "Anders Opedal" in names
+    assert "ERNST & YOUNG AS" in names
+
+    # Verify institutional entity distinction
+    ey_role = next(p for p in people if p.name == "ERNST & YOUNG AS")
+    assert ey_role.is_organization is True
+    assert ey_role.organization_number == "976389387"
+    assert ey_role.role_code == "REVI"
 
     facts = people_to_facts(people)
     assert any(f.field == "board_chair" for f in facts)
     assert any(f.field == "ceo" for f in facts)
+    assert any(f.field == "auditor" for f in facts)
 
 
 def test_extract_financials_from_regnskap():

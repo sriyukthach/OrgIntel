@@ -102,6 +102,8 @@ CREATE TABLE IF NOT EXISTS people (
     source_url TEXT NOT NULL,
     verification_status TEXT NOT NULL,
     evidence_excerpt TEXT,
+    is_organization INTEGER DEFAULT 0,
+    organization_number TEXT,
     FOREIGN KEY (org_number) REFERENCES companies(org_number) ON DELETE CASCADE
 );
 
@@ -178,19 +180,36 @@ CREATE INDEX IF NOT EXISTS idx_cache_expires ON source_cache(expires_at);
 
 
 def init_sync_db():
-    """Synchronously create database tables."""
+    """Synchronously create database tables and run migrations."""
     conn = sqlite3.connect(str(settings.DATABASE_PATH))
     try:
         conn.executescript(SCHEMA_SQL)
+        # Migrations for added columns if tables already exist
+        try:
+            conn.execute("ALTER TABLE people ADD COLUMN is_organization INTEGER DEFAULT 0")
+        except Exception:
+            pass
+        try:
+            conn.execute("ALTER TABLE people ADD COLUMN organization_number TEXT")
+        except Exception:
+            pass
         conn.commit()
     finally:
         conn.close()
 
 
 async def init_db():
-    """Asynchronously initialize SQLite database."""
+    """Asynchronously initialize SQLite database and run migrations."""
     async with aiosqlite.connect(str(settings.DATABASE_PATH)) as db:
         await db.executescript(SCHEMA_SQL)
+        try:
+            await db.execute("ALTER TABLE people ADD COLUMN is_organization INTEGER DEFAULT 0")
+        except Exception:
+            pass
+        try:
+            await db.execute("ALTER TABLE people ADD COLUMN organization_number TEXT")
+        except Exception:
+            pass
         await db.commit()
 
 

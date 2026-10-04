@@ -55,12 +55,13 @@ const UIComponents = {
   },
 
   renderLeadershipCard(person) {
+    const isOrg = person.is_organization || !!person.organization_number;
     return `
       <div class="leadership-card">
         <div class="lead-role">${this.escapeHtml(person.role || 'Board / Executive')}</div>
         <div class="lead-name">${this.escapeHtml(person.name)}</div>
         <div class="lead-meta">
-          ${person.birth_year ? `<span>Born: ${person.birth_year}</span> • ` : ''}
+          ${isOrg ? `<span class="badge badge-subtle text-xs">Entity: ${this.escapeHtml(person.organization_number || 'Registered')}</span> • ` : (person.birth_year ? `<span>Born: ${person.birth_year}</span> • ` : '')}
           <span class="text-xs text-muted">Verified in Brreg Roller</span>
         </div>
       </div>
