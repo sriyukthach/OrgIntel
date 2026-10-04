@@ -56,6 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
       badge.style.color = 'var(--status-verified-text)';
       badge.style.backgroundColor = 'var(--status-verified-bg)';
       badge.style.borderColor = 'var(--status-verified-border)';
+    } else if (health.status === 'unconfigured') {
+      badge.innerHTML = '<span class="status-indicator-dot" style="background:#dc2626"></span> API Not Configured';
+      badge.style.color = 'var(--status-ambiguous-text)';
+      badge.style.backgroundColor = 'var(--status-ambiguous-bg)';
+      badge.style.borderColor = 'var(--status-ambiguous-border)';
+      badge.title = health.message || 'Set window.ORGINTEL_API_BASE with your deployed backend URL.';
     } else {
       badge.innerHTML = '<span class="status-indicator-dot" style="background:#d97706"></span> Degraded';
       badge.style.color = 'var(--status-probable-text)';
