@@ -3,7 +3,9 @@
  * Manages REST communication with backend services.
  */
 
-const API_BASE = '/api';
+const API_BASE = (typeof window !== 'undefined' && window.location.port && window.location.port !== '8000')
+  ? `http://${window.location.hostname || 'localhost'}:8000/api`
+  : '/api';
 
 const OrgIntelAPI = {
   async checkHealth() {
