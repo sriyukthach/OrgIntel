@@ -16,11 +16,15 @@ class ActivityResearcher(BaseSourceClient):
         super().__init__(tracker)
         self.brreg_client = BrregClient(tracker)
 
-    async def research_activities(self, org_number: str) -> Tuple[List[CompanyActivity], str]:
+    async def research_activities(
+        self, org_number: str, force_refresh: bool = False
+    ) -> Tuple[List[CompanyActivity], str]:
         """
         Retrieves official register announcements from Kunngjøringsregisteret.
         """
-        raw_announcements, source_url = await self.brreg_client.fetch_kunngjoringer(org_number)
+        raw_announcements, source_url = await self.brreg_client.fetch_kunngjoringer(
+            org_number, force_refresh=force_refresh
+        )
         activities: List[CompanyActivity] = []
 
         for item in raw_announcements[:10]:

@@ -17,7 +17,7 @@ class CompanyWebClient(BaseSourceClient):
         super().__init__(tracker)
 
     async def analyze_website(
-        self, website_url: str, legal_name: str
+        self, website_url: str, legal_name: str, force_refresh: bool = False
     ) -> Tuple[Optional[CompanyOverview], List[Fact], str]:
         """
         Retrieves homepage and optionally an 'About' page to extract company overview facts.
@@ -30,7 +30,9 @@ class CompanyWebClient(BaseSourceClient):
         if not website_url.startswith("http"):
             website_url = f"https://{website_url}"
 
-        html_body, status, resolved_url = await self.fetch_url(website_url, is_json=False)
+        html_body, status, resolved_url = await self.fetch_url(
+            website_url, is_json=False, force_refresh=force_refresh
+        )
         if not html_body or status != 200:
             return None, facts, website_url
 
@@ -48,7 +50,9 @@ class CompanyWebClient(BaseSourceClient):
                     break
 
         if about_url and about_url != resolved_url:
-            about_html, about_status, about_resolved = await self.fetch_url(about_url, is_json=False)
+            about_html, about_status, about_resolved = await self.fetch_url(
+                about_url, is_json=False, force_refresh=force_refresh
+            )
             if about_html and about_status == 200:
                 parsed_about = parse_html_document(about_html, base_url=about_resolved)
                 if parsed_about.get("clean_text"):

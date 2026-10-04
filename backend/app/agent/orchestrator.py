@@ -6,6 +6,7 @@ OBSERVE -> PLAN -> SEARCH -> EXTRACT -> VERIFY -> STORE -> CHECK GAPS -> SEARCH 
 
 import time
 import uuid
+import asyncio
 from typing import AsyncGenerator, Dict, Any, List, Optional, Callable
 from datetime import datetime, timezone
 
@@ -49,10 +50,12 @@ class ResearchOrchestrator:
     async def run_research(
         self,
         org_number: str,
+        force_refresh: bool = False,
         progress_callback: Optional[Callable[[Dict[str, Any]], None]] = None,
     ) -> Tuple[Optional[CompanyProfile], ResearchRun, Dict[str, Any]]:
         """
         Executes full agentic research pipeline for a given organization number.
+        When force_refresh=True, bypasses cached source responses and performs fresh network queries.
         Returns (CompanyProfile, ResearchRun, ChangeSummary).
         """
         run_id = f"run_{uuid.uuid4().hex[:12]}"
@@ -91,7 +94,7 @@ class ResearchOrchestrator:
             # 2. RESOLVE IDENTITY (Authoritative Registry Check)
             run.sources_attempted.append("brreg_enheter")
             await emit("IDENTITY_RESOLUTION", "Resolving organization in authoritative Norwegian registry...", "RUNNING")
-            identity, res_msg = await self.resolver.resolve_identity(org_number)
+            identity, res_msg = await self.resolver.resolve_identity(org_number, force_refresh=force_refresh)
 
             if not identity:
                 run.status = ResearchRunStatus.FAILED
@@ -116,7 +119,9 @@ class ResearchOrchestrator:
             # 3. ROLES & LEADERSHIP RESEARCH
             run.sources_attempted.append("brreg_roller")
             await emit("LEADERSHIP_RESEARCH", "Extracting executive management and registered board members...", "RUNNING")
-            roles_raw, roles_url = await self.brreg_client.fetch_roller(identity.organization_number)
+            roles_raw, roles_url = await self.brreg_client.fetch_roller(
+                identity.organization_number, force_refresh=force_refresh
+            )
             leadership: List[PersonRole] = []
             if roles_raw:
                 run.sources_successful.append("brreg_roller")
@@ -134,7 +139,9 @@ class ResearchOrchestrator:
             # 4. FINANCIAL AUDIT & ACCOUNTS RESEARCH
             run.sources_attempted.append("brreg_regnskap")
             await emit("FINANCIAL_AUDIT", "Searching Regnskapsregisteret for audited financial filings...", "RUNNING")
-            financials, fin_facts, fin_url = await self.fin_researcher.research_financials(identity.organization_number)
+            financials, fin_facts, fin_url = await self.fin_researcher.research_financials(
+                identity.organization_number, force_refresh=force_refresh
+            )
             if financials:
                 run.sources_successful.append("brreg_regnskap")
                 accumulated_facts.extend(fin_facts)
@@ -152,7 +159,7 @@ class ResearchOrchestrator:
                 run.sources_attempted.append("company_website")
                 await emit("WEBSITE_ANALYSIS", f"Analyzing official website ({identity.website})...", "RUNNING")
                 web_overview, web_facts, web_url = await self.web_client.analyze_website(
-                    identity.website, identity.legal_name
+                    identity.website, identity.legal_name, force_refresh=force_refresh
                 )
                 if web_overview and web_overview.business_description:
                     run.sources_successful.append("company_website")
@@ -165,7 +172,9 @@ class ResearchOrchestrator:
             # 6. ANNOUNCEMENTS & CORPORATE EVENTS
             run.sources_attempted.append("brreg_kunngjoringer")
             await emit("ACTIVITY_ANALYSIS", "Checking Kunngjøringsregisteret for official corporate announcements...", "RUNNING")
-            activities, act_url = await self.act_researcher.research_activities(identity.organization_number)
+            activities, act_url = await self.act_researcher.research_activities(
+                identity.organization_number, force_refresh=force_refresh
+            )
             if activities:
                 run.sources_successful.append("brreg_kunngjoringer")
                 await emit("ACTIVITY_ANALYSIS", f"Retrieved {len(activities)} recent register announcements.", "COMPLETED")

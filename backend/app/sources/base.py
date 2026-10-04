@@ -53,30 +53,33 @@ class BaseSourceClient:
         headers: Optional[Dict[str, str]] = None,
         is_json: bool = True,
         ttl_hours: int = 24,
+        force_refresh: bool = False,
     ) -> Tuple[Optional[Any], int, str]:
         """
         Fetches URL with caching, rate limiting, and retries.
+        If force_refresh is True, bypasses cache, makes a fresh network call, and updates cache.
         Returns (parsed_data_or_text, status_code, source_url).
         """
         cache_key = self._get_cache_key(url, params)
 
-        # 1. Check persistent SQLite cache
-        cached = await Repository.get_cached_response(cache_key)
-        if cached:
-            self.tracker.record_request(cached=True)
-            body = cached["body"]
-            status_code = cached["status_code"]
-            if is_json and status_code == 200:
-                try:
-                    import json
-                    return json.loads(body), status_code, url
-                except Exception:
-                    return body, status_code, url
-            return body, status_code, url
+        # 1. Check persistent SQLite cache ONLY if not force_refresh
+        if not force_refresh and settings.CACHE_ENABLED:
+            cached = await Repository.get_cached_response(cache_key)
+            if cached:
+                self.tracker.record_request(cached=True)
+                body = cached["body"]
+                status_code = cached["status_code"]
+                if is_json and status_code == 200:
+                    try:
+                        import json
+                        return json.loads(body), status_code, url
+                    except Exception:
+                        return body, status_code, url
+                return body, status_code, url
 
         # 2. Network Request with Exponential Backoff
         req_headers = {**self.headers, **(headers or {})}
-        timeout = httpx.Timeout(settings.HTTP_TIMEOUT_SECONDS, connect=2.0)
+        timeout = httpx.Timeout(settings.HTTP_TIMEOUT_SECONDS, connect=5.0)
 
         for attempt in range(settings.HTTP_MAX_RETRIES + 1):
             try:
@@ -120,7 +123,6 @@ class BaseSourceClient:
                         return None, response.status_code, url
 
             except (httpx.ConnectError, httpx.ConnectTimeout):
-                # Immediate network unreachable / DNS error -> fail fast without retrying
                 self.tracker.errors_count += 1
                 return None, 0, url
 

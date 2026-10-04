@@ -72,7 +72,7 @@ async def research_company(payload: ResearchRequest):
             )
 
     orchestrator = ResearchOrchestrator()
-    profile, run, changes = await orchestrator.run_research(clean_nr)
+    profile, run, changes = await orchestrator.run_research(clean_nr, force_refresh=payload.force_refresh)
 
     if not profile:
         raise HTTPException(
