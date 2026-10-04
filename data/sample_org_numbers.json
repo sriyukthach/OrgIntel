@@ -1,0 +1,62 @@
+[
+  {
+    "organization_number": "923609016",
+    "name": "EQUINOR ASA",
+    "sector": "Energy / Oil & Gas",
+    "municipality": "Stavanger"
+  },
+  {
+    "organization_number": "982463718",
+    "name": "DNB BANK ASA",
+    "sector": "Banking & Financial Services",
+    "municipality": "Oslo"
+  },
+  {
+    "organization_number": "920218687",
+    "name": "KONGSBERG GRUPPEN ASA",
+    "sector": "Defense & Marine Technology",
+    "municipality": "Kongsberg"
+  },
+  {
+    "organization_number": "912345678",
+    "name": "NORDIC TECH INNOVATION AS",
+    "sector": "Software & Technology",
+    "municipality": "Oslo"
+  },
+  {
+    "organization_number": "914778271",
+    "name": "SCHIBSTED ASA",
+    "sector": "Media & Technology",
+    "municipality": "Oslo"
+  },
+  {
+    "organization_number": "990888213",
+    "name": "ORKLA ASA",
+    "sector": "Consumer Goods",
+    "municipality": "Oslo"
+  },
+  {
+    "organization_number": "974760673",
+    "name": "TELENOR ASA",
+    "sector": "Telecommunications",
+    "municipality": "Bærum"
+  },
+  {
+    "organization_number": "980489698",
+    "name": "MOWI ASA",
+    "sector": "Aquaculture / Seafood",
+    "municipality": "Bergen"
+  },
+  {
+    "organization_number": "987009713",
+    "name": "TOMRA SYSTEMS ASA",
+    "sector": "Circular Economy / Sensors",
+    "municipality": "Asker"
+  },
+  {
+    "organization_number": "984851006",
+    "name": "YARA INTERNATIONAL ASA",
+    "sector": "Agriculture & Chemicals",
+    "municipality": "Oslo"
+  }
+]

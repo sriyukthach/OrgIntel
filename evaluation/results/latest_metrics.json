@@ -1,0 +1,24 @@
+{
+  "total_companies_evaluated": 10,
+  "composite_intelligence_score": 82.0,
+  "facts": {
+    "total_extracted": 100,
+    "total_verified": 100,
+    "total_ambiguous": 0,
+    "verification_rate": 1.0,
+    "evidence_provenance_rate": 1.0
+  },
+  "coverage": {
+    "leadership_rate": 0.4,
+    "financials_rate": 0.4,
+    "overview_rate": 1.0,
+    "activities_rate": 0.4
+  },
+  "performance": {
+    "total_outbound_requests": 0,
+    "avg_requests_per_company": 0.0,
+    "total_cost_usd": 0.0,
+    "avg_latency_ms": 115.18,
+    "challenge_limits_compliant": true
+  }
+}
